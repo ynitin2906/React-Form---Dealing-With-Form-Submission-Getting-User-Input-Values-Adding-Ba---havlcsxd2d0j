@@ -3,6 +3,7 @@ import "../styles/App.css";
 import { validateForm } from "../utils/validation/Register";
 
 const App = () => {
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [state, setState] = useState({
     username: "",
     email: "",
@@ -27,7 +28,8 @@ const App = () => {
       setPrintError(validationResult);
       return;
     }
-    alert("Success");
+    setIsSubmitted(true);
+    // alert("Success");
 
     setState({
       ...state,
@@ -44,7 +46,9 @@ const App = () => {
   };
   return (
     <div id="main">
-      {/* {<h3 className='success-alert'>Registered Successfullly</h3>} */}
+      {isSubmitted && (
+        <h3 className="success-alert">Registered Successfullly</h3>
+      )}
       <form onSubmit={onFormSubmit}>
         <h1>Registeration Form</h1>
         <section>

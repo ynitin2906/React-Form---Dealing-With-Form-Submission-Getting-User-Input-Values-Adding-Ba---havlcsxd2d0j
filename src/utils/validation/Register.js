@@ -9,10 +9,10 @@ export const validateForm = (formObject) => {
   }
 
   if (formObject.password.length < 4) {
-    errors.password = "Password should contain atleast 4 characters";
+    errors.password = "Password must have more than 4 characters";
   }
   if (formObject.contactNo.length !== 10) {
-    errors.contactNo = "Contact Number should contain olny 10 numbers";
+    errors.contactNo = "Invalid contact no.";
   }
   return errors;
 };
