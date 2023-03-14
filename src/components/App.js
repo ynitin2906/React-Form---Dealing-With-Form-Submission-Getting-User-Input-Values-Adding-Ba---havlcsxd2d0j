@@ -38,7 +38,7 @@ const App = () => {
       password: "",
       contactNo: "",
     });
-    e.target.reset();
+    // e.target.reset();
   };
 
   const onInputChangeHandler = (e) => {
