@@ -1,103 +1,107 @@
 import React, { useState } from "react";
 import "../styles/App.css";
-import { validateForm } from "../utils/validation/Register";
-
 const App = () => {
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [state, setState] = useState({
+  const [formFields, setFormFields] = useState({
     username: "",
     email: "",
     password: "",
     contactNo: "",
   });
+  const [formErrors, setFormErrors] = useState({});
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
-  const [printError, setPrintError] = useState({
-    username: "",
-    email: "",
-    password: "",
-    contactNo: "",
-  });
-  const validateForm = (formObject) => {
+  function handleInputChange(event) {
+    const { name, value } = event.target;
+    setFormFields({ ...formFields, [name]: value });
+  }
+
+  function validateForm(inputValues) {
     const errors = {};
 
-    if (!formObject.username) {
+    if (!inputValues.username) {
       errors.username = "Username is required";
     }
 
-    if (!formObject.email) {
+    if (!inputValues.email) {
       errors.email = "Email is required";
     }
 
-    if (!formObject.password) {
+    if (!inputValues.password) {
       errors.password = "Password is required";
-    } else if (formObject.password.length < 4) {
+    } else if (inputValues.password.length < 4) {
       errors.password = "Password must have more than 4 characters";
     }
 
-    if (!formObject.contactNo) {
+    if (!inputValues.contactNo) {
       errors.contactNo = "Contact no. is required";
-    } else if (formObject.contactNo.length !== 10) {
+    } else if (inputValues.contactNo.length !== 10) {
       errors.contactNo = "Invalid contact no.";
     }
 
     return errors;
-  };
+  }
 
-  const onFormSubmit = (e) => {
-    e.preventDefault();
-    setPrintError({});
-    // console.log("form submitted");
-
-    const validationResult = validateForm(state);
-    if (Object.keys(validationResult).length > 0) {
-      setPrintError(validationResult);
-      return;
-    }
-    setIsSubmitted(true);
-    // alert("Success");
-
-    setState({
-      ...state,
+  function handleFormSubmit(event) {
+    event.preventDefault();
+    setFormErrors(validateForm(formFields));
+    setIsFormSubmitted(true);
+    setFormFields({
       username: "",
       email: "",
       password: "",
       contactNo: "",
     });
-    // e.target.reset();
-  };
+  }
 
-  const onInputChangeHandler = (e) => {
-    setState({ ...state, [e.target.name]: e.target.value });
-  };
   return (
     <div id="main">
-      {isSubmitted && (
+      {Object.keys(formErrors).length === 0 && isFormSubmitted ? (
         <h3 className="success-alert">Registered Successfullly</h3>
-      )}
-      <form onSubmit={onFormSubmit}>
+      ) : null}
+      <form onSubmit={handleFormSubmit}>
         <h1>Registeration Form</h1>
         <section>
           <label>Username</label>
-          <input type="text" name="username" onChange={onInputChangeHandler} />
-          <p className="username-error">{printError.username}</p>
+          <input
+            type="text"
+            name="username"
+            value={formFields.username}
+            onChange={handleInputChange}
+          />
+          {formErrors.username && (
+            <p className="username-error">{formErrors.username}</p>
+          )}
           <label>Email</label>
-          <input type="email" name="email" onChange={onInputChangeHandler} />
-          <p className="email-error">{printError.email}</p>
+          <input
+            type="email"
+            name="email"
+            value={formFields.email}
+            onChange={handleInputChange}
+          />
+          {formErrors.email && (
+            <p className="email-error">{formErrors.email}</p>
+          )}
           <label>Password</label>
           <input
             type="password"
             name="password"
-            onChange={onInputChangeHandler}
+            value={formFields.password}
+            onChange={handleInputChange}
           />
-          <p className="password-error">{printError.password}</p>
+          {formErrors.password && (
+            <p className="password-error">{formErrors.password}</p>
+          )}
           <label>Contact Number</label>
           <input
             type="number"
             name="contactNo"
-            onChange={onInputChangeHandler}
+            value={formFields.contactNo}
+            onChange={handleInputChange}
           />
-          <p className="contactNo-error">{printError.contactNo}</p>
-          <button>Submit</button>
+          {formErrors.contactNo && (
+            <p className="contactNo-error">{formErrors.contactNo}</p>
+          )}
+          <button onClick={handleFormSubmit}>Submit</button>
         </section>
       </form>
     </div>
